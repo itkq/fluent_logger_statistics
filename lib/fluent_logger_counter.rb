@@ -1,5 +1,4 @@
 require "fluent_logger_counter/version"
-
-module FluentLoggerCounter
-  # Your code goes here...
-end
+require "fluent_logger_counter/app"
+require "fluent_logger/middleware"
+require "fluent_logger/fluent_logger"
