@@ -1,17 +1,17 @@
 require "fluent_logger_counter/app"
 
 module FluentLoggerCounter
-  class MiddleWare
-    def initialize(app, logger, options={})
-      @logger = logger
+  class Middleware
+    def initialize(app, path, logger, options={})
       @app = app
-      @fluent_app = App.new(logger, **options)
+      @path = path
+      @fluent_app = App.new(logger)
     end
 
     ACCEPT_METHODS = ['GET'].freeze
 
     def call(env)
-      if ACCEPT_METHODS.include?(env['REQUEST_METHOD'])
+      if env['PATH_INFO'] == @path && ACCEPT_METHODS.include?(env['REQUEST_METHOD'])
         @fluent_app.call(env)
       else
         @app.call(env)
