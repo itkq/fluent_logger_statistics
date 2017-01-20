@@ -2,7 +2,7 @@ require "fluent_logger_counter/app"
 
 module FluentLoggerCounter
   class Middleware
-    def initialize(app, path, logger, options={})
+    def initialize(app, path, logger)
       @app = app
       @path = path
       @fluent_app = App.new(logger)
