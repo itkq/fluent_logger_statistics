@@ -13,7 +13,7 @@ module FluentLoggerCounter
 
       status = 200
       header = {'Content-Type' => 'application/json'}
-      body = {"buffer_size": @fluent_logger.pending_bytesize}
+      body = [{"buffer_size": @fluent_logger.pending_bytesize}.to_json]
 
       [status, header, body]
     end
