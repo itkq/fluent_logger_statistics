@@ -56,7 +56,6 @@ describe 'middleware' do
     app
 
     expect(mockapp.instances.size).to be_eql 2
-    puts mockapp.instances
     expect(mockapp.instances[0].logger).to be_eql logger1
     expect(mockapp.instances[1].logger).to be_eql logger2
   end
@@ -78,6 +77,12 @@ describe 'middleware' do
     expect(json["buffer_size"]).to be_eql 0
 
     get '/api/fluent_logger_counter/stderr'
+    json = JSON.parse(last_response.body)
+    expect(json["buffer_size"]).to be_eql 0
+  end
+
+  it 'pass requests with deleting end slash' do
+    get '/api/fluent_logger_counter/stdout/'
     json = JSON.parse(last_response.body)
     expect(json["buffer_size"]).to be_eql 0
   end
