@@ -18,6 +18,7 @@ describe 'app' do
       :host => 'localhost',
       :port => fluentd.port,
       :logger => logger,
+      :buffer_limit => 100,
     })
   }
 
@@ -46,10 +47,8 @@ describe 'app' do
         logger.post('tag', {'a' => 'b'})
         get '/'
         json = JSON.parse(last_response.body)
-        expect(json["buffer_size"]).to be_eql 0
-
-        get '/?r=1'
-        json = JSON.parse(last_response.body)
+        expect(json["buffer_bytesize"]).to be_eql 0
+        expect(json["buffer_limit"]).to be_eql 100
         expect(json["buffer_usage_rate"]).to be_eql 0.0
       end
     end
@@ -61,10 +60,8 @@ describe 'app' do
         logger.post('tag', {'a' => 'b'})
         get '/'
         json = JSON.parse(last_response.body)
-        expect(json["buffer_size"]).to be > 0
-
-        get '/?r=1'
-        json = JSON.parse(last_response.body)
+        expect(json["buffer_bytesize"]).to be > 0
+        expect(json["buffer_limit"]).to be_eql 100
         expect(json["buffer_usage_rate"]).to be > 0
       end
     end

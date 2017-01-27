@@ -16,13 +16,16 @@ module FluentLoggerCounter
       status = 200
       header = {'Content-Type' => 'application/json'}
 
-      query = parse_query(env['QUERY_STRING'])
-      if query["r"]
-        rate = @fluent_logger.pending_bytesize/@fluent_logger.limit.to_f
-        body = [{"buffer_usage_rate": rate}.to_json]
-      else
-        body = [{"buffer_size": @fluent_logger.pending_bytesize}.to_json]
-      end
+      bytesize = @fluent_logger.pending_bytesize
+      limit = @fluent_logger.limit
+      usage_rate = bytesize / limit.to_f
+
+      body = [
+        { buffer_bytesize: bytesize,
+          buffer_limit: limit,
+          buffer_usage_rate: usage_rate
+        }.to_json
+      ]
 
       [status, header, body]
     end
