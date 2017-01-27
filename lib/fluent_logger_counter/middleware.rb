@@ -12,8 +12,9 @@ module FluentLoggerCounter
     ACCEPT_METHODS = ['GET'].freeze
 
     def call(env)
-      if @fluent_apps[env['PATH_INFO']] && ACCEPT_METHODS.include?(env['REQUEST_METHOD'])
-        @fluent_apps[env['PATH_INFO']].call(env)
+      path = env['PATH_INFO'].sub(/\/$/, '')
+      if @fluent_apps[path] && ACCEPT_METHODS.include?(env['REQUEST_METHOD'])
+        @fluent_apps[path].call(env)
       else
         @app.call(env)
       end
