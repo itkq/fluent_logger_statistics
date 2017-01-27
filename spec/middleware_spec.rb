@@ -81,7 +81,7 @@ describe 'middleware' do
     expect(json["buffer_size"]).to be_eql 0
   end
 
-  it 'pass requests with deleting end slash' do
+  it 'pass requests to FluentLoggerCounter::App with deleting end slash' do
     get '/api/fluent_logger_counter/stdout/'
     json = JSON.parse(last_response.body)
     expect(json["buffer_size"]).to be_eql 0
