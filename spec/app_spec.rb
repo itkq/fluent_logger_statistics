@@ -47,6 +47,10 @@ describe 'app' do
         get '/'
         json = JSON.parse(last_response.body)
         expect(json["buffer_size"]).to be_eql 0
+
+        get '/?r=1'
+        json = JSON.parse(last_response.body)
+        expect(json["buffer_usage_rate"]).to be_eql 0.0
       end
     end
   end
@@ -58,6 +62,10 @@ describe 'app' do
         get '/'
         json = JSON.parse(last_response.body)
         expect(json["buffer_size"]).to be > 0
+
+        get '/?r=1'
+        json = JSON.parse(last_response.body)
+        expect(json["buffer_usage_rate"]).to be > 0
       end
     end
   end
