@@ -1,6 +1,6 @@
 require 'fluent-logger'
 
-module FluentLoggerCounter
+module FluentLoggerStatistics
   module FluentLoggerExt
     def pending_bytesize
       if @pending
@@ -12,4 +12,4 @@ module FluentLoggerCounter
   end
 end
 
-Fluent::Logger::FluentLogger.include(FluentLoggerCounter::FluentLoggerExt)
+Fluent::Logger::FluentLogger.include(FluentLoggerStatistics::FluentLoggerExt)

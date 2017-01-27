@@ -1,9 +1,9 @@
-# FluentLoggerCounter
+# FluentLoggerstatistics
 
 ## Usage
 Middleware settings
 ```ruby
-Rails.configuration.middleware.use FluentLoggerCounter::Middleware,
+Rails.configuration.middleware.use FluentLoggerstatistics::Middleware,
   '/endpoint',
   {
     resource_name1: fluent_logger1, # instance of Fluent::Logger::FluentLogger
