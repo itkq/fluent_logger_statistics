@@ -1,6 +1,6 @@
-require "fluent_logger_counter/app"
+require "fluent_logger_statistics/app"
 
-module FluentLoggerCounter
+module FluentLoggerStatistics
   class Middleware
     def initialize(app, endpoint, loggers)
       @app = app

@@ -1,4 +1,4 @@
-module FluentLoggerCounter
+module FluentLoggerStatistics
   class App
     include Rack::Utils
 

@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'support/dummy_serverengine'
 require 'support/dummy_fluentd'
 require 'fluent-logger'
-require 'fluent_logger_counter/middleware'
+require 'fluent_logger_statistics/middleware'
 
 require 'logger'
 require 'stringio'
@@ -22,7 +22,7 @@ describe 'app' do
     })
   }
 
-  let(:app) { FluentLoggerCounter::App.new(logger) }
+  let(:app) { FluentLoggerStatistics::App.new(logger) }
 
   context "running fluentd" do
     before(:all) do

@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'fluent_logger_counter/version'
+require 'fluent_logger_statistics/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "fluent_logger_counter"
-  spec.version       = FluentLoggerCounter::VERSION
+  spec.name          = "fluent_logger_statistics"
+  spec.version       = FluentLoggerStatistics::VERSION
   spec.authors       = ["Takuya Kosugiyama"]
   spec.email         = ["takuya-kosugiyama@cookpad.com"]
 

@@ -1,9 +1,9 @@
 require 'spec_helper'
 require 'logger'
 require 'fluent-logger'
-require 'fluent_logger_counter/middleware'
+require 'fluent_logger_statistics/middleware'
 
-module FluentLoggerCounter
+module FluentLoggerStatistics
   AppOriginal = App
 end
 
@@ -35,21 +35,21 @@ describe 'middleware' do
   end
 
   let(:app) {
-    FluentLoggerCounter::Middleware.new(
+    FluentLoggerStatistics::Middleware.new(
       nextapp,
-      '/api/fluent_logger_counter/',
+      '/api/fluent_logger_statistics/',
       {"stdout" => logger1, "stderr" => logger2}
     )
   }
 
   before do
-    FluentLoggerCounter.send(:remove_const, :App)
-    FluentLoggerCounter.const_set(:App, mockapp)
+    FluentLoggerStatistics.send(:remove_const, :App)
+    FluentLoggerStatistics.const_set(:App, mockapp)
   end
 
   after do
-    FluentLoggerCounter.send(:remove_const, :App)
-    FluentLoggerCounter.const_set(:App, FluentLoggerCounter::AppOriginal)
+    FluentLoggerStatistics.send(:remove_const, :App)
+    FluentLoggerStatistics.const_set(:App, FluentLoggerStatistics::AppOriginal)
   end
 
   it 'instantiates App with proper argument' do
@@ -65,24 +65,24 @@ describe 'middleware' do
     expect(last_response.body).to be_eql 'OK'
     post '/'
     expect(last_response.body).to be_eql 'OK'
-    get '/api/fluent_logger_counter/'
+    get '/api/fluent_logger_statistics/'
     expect(last_response.body).to be_eql 'OK'
-    post '/api/fluent_logger_counter/'
+    post '/api/fluent_logger_statistics/'
     expect(last_response.body).to be_eql 'OK'
   end
 
-  it 'pass requests to FluentLoggerCounter::App on specific path' do
-    get '/api/fluent_logger_counter/stdout'
+  it 'pass requests to FluentLoggerStatistics::App on specific path' do
+    get '/api/fluent_logger_statistics/stdout'
     json = JSON.parse(last_response.body)
     expect(json["buffer_size"]).to be_eql 0
 
-    get '/api/fluent_logger_counter/stderr'
+    get '/api/fluent_logger_statistics/stderr'
     json = JSON.parse(last_response.body)
     expect(json["buffer_size"]).to be_eql 0
   end
 
-  it 'pass requests to FluentLoggerCounter::App with deleting end slash' do
-    get '/api/fluent_logger_counter/stdout/'
+  it 'pass requests to FluentLoggerStatistics::App with deleting end slash' do
+    get '/api/fluent_logger_statistics/stdout/'
     json = JSON.parse(last_response.body)
     expect(json["buffer_size"]).to be_eql 0
   end
