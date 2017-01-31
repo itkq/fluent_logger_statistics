@@ -1,7 +1,7 @@
 # FluentLoggerstatistics
 
 ## Usage
-Middleware settings
+Middleware settings:
 ```ruby
 Rails.configuration.middleware.use FluentLoggerstatistics::Middleware,
   '/endpoint',
@@ -12,11 +12,11 @@ Rails.configuration.middleware.use FluentLoggerstatistics::Middleware,
   }
 ```
 
-Then
+After rails boot, then
 ```sh
-$ curl http://rails-host/endpoint/resource_name1
-{"buffer_size":0}
+$ curl http://rails-host/endpoint/resource_name2 # no buffer used
+{"buffer_bytesize":0,"buffer_limit":8388608,"buffer_usage_rate":0.0}
 
-$ curl http://rails-host/endpoint/resource_name2/?r=1
-{"buffer_usage_rate":0.0}
+$ curl http://rails-host/endpoint/resource_name2 # buffered
+{"buffer_bytesize":236,"buffer_limit":8388608,"buffer_usage_rate":2.8133392333984375e-05}
 ```
