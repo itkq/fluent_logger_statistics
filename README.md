@@ -1,5 +1,7 @@
 # FluentLoggerStatistics
 
+[![Build Status](https://travis-ci.org/itkq/fluent_logger_statistics.svg?branch=master)](https://travis-ci.org/itkq/fluent_logger_statistics)
+
 ## Usage
 Middleware settings:
 ```ruby
