@@ -14,7 +14,7 @@ Rails.configuration.middleware.use FluentLoggerStatistics::Middleware,
 
 After rails boot, then
 ```sh
-$ curl http://rails-host/endpoint/resource_name2 # no buffer used
+$ curl http://rails-host/endpoint/resource_name1 # no buffer used
 {"buffer_bytesize":0,"buffer_limit":8388608,"buffer_usage_rate":0.0}
 
 $ curl http://rails-host/endpoint/resource_name2 # buffered
