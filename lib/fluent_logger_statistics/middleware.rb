@@ -2,20 +2,17 @@ require "fluent_logger_statistics/app"
 
 module FluentLoggerStatistics
   class Middleware
-    def initialize(app, endpoint, loggers)
+    def initialize(app, path, loggers)
       @app = app
-      @fluent_apps = loggers.map{|resource, logger|
-        path = [ endpoint.chomp('/'), resource ].join('/')
-        [ path, App.new(logger) ]
-      }.to_h
+      @path = path
+      @fluent_app = App.new(loggers)
     end
 
     ACCEPT_METHODS = ['GET'].freeze
 
     def call(env)
-      path = env['PATH_INFO'].chomp('/')
-      if @fluent_apps[path] && ACCEPT_METHODS.include?(env['REQUEST_METHOD'])
-        @fluent_apps[path].call(env)
+      if env['PATH_INFO'] == @path && ACCEPT_METHODS.include?(env['REQUEST_METHOD'])
+        @fluent_app.call(env)
       else
         @app.call(env)
       end

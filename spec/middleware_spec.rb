@@ -19,15 +19,18 @@ describe 'middleware' do
         @instances ||= []
       end
 
-      def initialize(logger)
-        @logger = logger
+      def initialize(loggers)
+        @loggers = loggers
         self.class.instances << self
       end
 
-      attr_reader :logger
+      attr_reader :loggers
 
       def call(env)
-        [200, {'Content-Type' => 'application/json'}, ['{"buffer_size":0}']]
+        [
+          200,
+          {'Content-Type' => 'application/json'},
+          ['{"stdout":{"buffer_bytesize":0,"buffer_limit":8388608,"buffer_usage_rate":0.0},"stderr":{"buffer_bytesize":0,"buffer_limit":8388608,"buffer_usage_rate":0.0}}']]
       end
 
       const_set(:ACCEPT_METHODS, %w[GET].freeze)
@@ -37,7 +40,7 @@ describe 'middleware' do
   let(:app) {
     FluentLoggerStatistics::Middleware.new(
       nextapp,
-      '/api/fluent_logger_statistics/',
+      '/fluent_logger_stats/',
       {"stdout" => logger1, "stderr" => logger2}
     )
   }
@@ -55,9 +58,9 @@ describe 'middleware' do
   it 'instantiates App with proper argument' do
     app
 
-    expect(mockapp.instances.size).to be_eql 2
-    expect(mockapp.instances[0].logger).to be_eql logger1
-    expect(mockapp.instances[1].logger).to be_eql logger2
+    expect(mockapp.instances.size).to be_eql 1
+    expect(mockapp.instances.first.loggers["stdout"]).to be_eql logger1
+    expect(mockapp.instances.first.loggers["stderr"]).to be_eql logger2
   end
 
   it 'pass-through requests to nextapp' do
@@ -65,25 +68,15 @@ describe 'middleware' do
     expect(last_response.body).to be_eql 'OK'
     post '/'
     expect(last_response.body).to be_eql 'OK'
-    get '/api/fluent_logger_statistics/'
-    expect(last_response.body).to be_eql 'OK'
-    post '/api/fluent_logger_statistics/'
+    post '/fluent_logger_stats/'
     expect(last_response.body).to be_eql 'OK'
   end
 
   it 'pass requests to FluentLoggerStatistics::App on specific path' do
-    get '/api/fluent_logger_statistics/stdout'
+    get '/fluent_logger_stats/'
     json = JSON.parse(last_response.body)
-    expect(json["buffer_size"]).to be_eql 0
-
-    get '/api/fluent_logger_statistics/stderr'
-    json = JSON.parse(last_response.body)
-    expect(json["buffer_size"]).to be_eql 0
+    expect(json["stdout"]["buffer_bytesize"]).to be_eql 0
+    expect(json["stderr"]["buffer_bytesize"]).to be_eql 0
   end
 
-  it 'pass requests to FluentLoggerStatistics::App with deleting end slash' do
-    get '/api/fluent_logger_statistics/stdout/'
-    json = JSON.parse(last_response.body)
-    expect(json["buffer_size"]).to be_eql 0
-  end
 end
