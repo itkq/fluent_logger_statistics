@@ -2,8 +2,8 @@ module FluentLoggerStatistics
   class App
     include Rack::Utils
 
-    def initialize(fluent_logger)
-      @fluent_logger = fluent_logger
+    def initialize(fluent_loggers)
+      @fluent_loggers = fluent_loggers
     end
 
     ACCEPT_METHODS = ['GET'].freeze
@@ -16,16 +16,18 @@ module FluentLoggerStatistics
       status = 200
       header = {'Content-Type' => 'application/json'}
 
-      bytesize = @fluent_logger.pending_bytesize
-      limit = @fluent_logger.limit
-      usage_rate = bytesize / limit.to_f
-
-      body = [
-        { buffer_bytesize: bytesize,
-          buffer_limit: limit,
+      stats = @fluent_loggers.map{|k,v|
+        bytesize = v.pending_bytesize
+        limit_bytesize = v.limit
+        usage_rate = bytesize / limit_bytesize.to_f
+        [k, {
+          buffer_bytesize: bytesize,
+          buffer_limit: limit_bytesize,
           buffer_usage_rate: usage_rate
-        }.to_json
-      ]
+        }]
+      }.to_h
+
+      body = [ stats.to_json ]
 
       [status, header, body]
     end

@@ -14,7 +14,7 @@ describe 'app' do
   let(:logger) {
     @logger_io = StringIO.new
     logger = ::Logger.new(@logger_io)
-    Fluent::Logger::FluentLogger.new('logger-test', {
+    Fluent::Logger::FluentLogger.new('test', {
       :host => 'localhost',
       :port => fluentd.port,
       :logger => logger,
@@ -22,7 +22,7 @@ describe 'app' do
     })
   }
 
-  let(:app) { FluentLoggerStatistics::App.new(logger) }
+  let(:app) { FluentLoggerStatistics::App.new({test_logger: logger}) }
 
   context "running fluentd" do
     before(:all) do
@@ -47,9 +47,9 @@ describe 'app' do
         logger.post('tag', {'a' => 'b'})
         get '/'
         json = JSON.parse(last_response.body)
-        expect(json["buffer_bytesize"]).to be_eql 0
-        expect(json["buffer_limit"]).to be_eql 100
-        expect(json["buffer_usage_rate"]).to be_eql 0.0
+        expect(json["test_logger"]["buffer_bytesize"]).to be_eql 0
+        expect(json["test_logger"]["buffer_limit"]).to be_eql 100
+        expect(json["test_logger"]["buffer_usage_rate"]).to be_eql 0.0
       end
     end
   end
@@ -60,9 +60,9 @@ describe 'app' do
         logger.post('tag', {'a' => 'b'})
         get '/'
         json = JSON.parse(last_response.body)
-        expect(json["buffer_bytesize"]).to be > 0
-        expect(json["buffer_limit"]).to be_eql 100
-        expect(json["buffer_usage_rate"]).to be > 0
+        expect(json["test_logger"]["buffer_bytesize"]).to be > 0
+        expect(json["test_logger"]["buffer_limit"]).to be_eql 100
+        expect(json["test_logger"]["buffer_usage_rate"]).to be > 0
       end
     end
   end
