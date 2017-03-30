@@ -1,0 +1,11 @@
+Release 0.4.0 - 2017/03/30
+
+	* Remove monkey patch for fluent-logger-ruby
+
+Release 0.3.0 - 2017/02/14
+
+	* Change output format
+
+Release 0.2.0 - 2017/02/03
+
+	* First release
